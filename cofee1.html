@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SM Coffee Cafe - Cart</title>
+    <style>
+        body{
+            margin:0;
+            font-family: Arial;
+            background:#f5f5f5;
+        }
+
+        header{
+            background:#3e2723;
+            color:white;
+            padding:15px;
+            text-align:center;
+        }
+
+        .container{
+            padding:30px;
+        }
+
+        .coffee-grid{
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap:20px;
+        }
+
+        .card{
+            background:white;
+            padding:15px;
+            border-radius:12px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            text-align:center;
+        }
+
+        img{
+            width:100%;
+            height:150px;
+            object-fit:cover;
+            border-radius:10px;
+        }
+
+        button{
+            background:#6d4c41;
+            color:white;
+            border:none;
+            padding:10px;
+            margin-top:10px;
+            border-radius:6px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#4e342e;
+        }
+
+        .cart{
+            margin-top:40px;
+            background:white;
+            padding:20px;
+            border-radius:12px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        input, select{
+            padding:8px;
+            margin:5px;
+            width:200px;
+        }
+
+        .pay-btn{
+            background:green;
+            margin-top:15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>SM Coffee Cafe ☕</h1>
+    <p>Select Your Favorite Hot or Cold Coffee</p>
+</header>
+
+<div class="container">
+
+    <h2>☕ Coffee Menu</h2>
+
+    <div class="coffee-grid" id="coffeeMenu"></div>
+
+    <div class="cart">
+        <h2>🛒 Your Cart</h2>
+        <ul id="cartItems"></ul>
+        <h3>Total: ₹<span id="total">0</span></h3>
+
+        <h3>Customer Details</h3>
+        <input type="text" id="customerName" placeholder="Enter your name">
+
+        <select id="paymentMethod">
+            <option value="">Select Payment</option>
+            <option>UPI</option>
+            <option>Credit Card</option>
+            <option>Debit Card</option>
+            <option>Cash</option>
+        </select>
+        <br>
+        <button class="pay-btn" onclick="makePayment()">Make Payment</button>
+    </div>
+
+</div>
+
+<script>
+
+const coffees = [
+    {name:"Espresso (Hot)", price:120, img:"https://images.unsplash.com/photo-1511920170033-f8396924c348"},
+    {name:"Cappuccino (Hot)", price:170, img:"https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd"},
+    {name:"Latte (Hot)", price:150, img:"https://images.unsplash.com/photo-1509042239860-f550ce710b93"},
+    {name:"Americano (Hot)", price:140, img:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085"},
+    {name:"Cold Coffee", price:160, img:"https://images.unsplash.com/photo-1461023058943-07fcbe16d735"},
+    {name:"Iced Latte", price:180, img:"https://images.unsplash.com/photo-1464306076886-da185f6a2d05"},
+    {name:"Mocha (Hot)", price:190, img:"https://images.unsplash.com/photo-1509042239860-f550ce710b93"},
+    {name:"Caramel Frappuccino (Cold)", price:210, img:"https://images.unsplash.com/photo-1527169402691-ae1c0e2d33db"}
+];
+
+let cart = [];
+
+function loadMenu(){
+    const menu = document.getElementById("coffeeMenu");
+
+    coffees.forEach((coffee, index)=>{
+        menu.innerHTML += `
+            <div class="card">
+                <img src="${coffee.img}">
+                <h3>${coffee.name}</h3>
+                <p>₹${coffee.price}</p>
+                <button onclick="addToCart(${index})">Add to Cart</button>
+            </div>
+        `;
+    });
+}
+
+function addToCart(index){
+    cart.push(coffees[index]);
+    displayCart();
+}
+
+function displayCart(){
+    const list = document.getElementById("cartItems");
+    const totalEl = document.getElementById("total");
+
+    list.innerHTML = "";
+
+    let total = 0;
+
+    cart.forEach(item=>{
+        total += item.price;
+        list.innerHTML += `<li>${item.name} - ₹${item.price}</li>`;
+    });
+
+    totalEl.textContent = total;
+}
+
+function makePayment(){
+    const name = document.getElementById("customerName").value;
+    const payment = document.getElementById("paymentMethod").value;
+
+    if(cart.length === 0){
+        alert("Your cart is empty!");
+        return;
+    }
+
+    if(name === "" || payment === ""){
+        alert("Please enter your name and select payment method.");
+        return;
+    }
+
+    alert(`✅ Payment Successful!\n\nThank you ${name} for your order.\nPayment Method: ${payment}`);
+
+    cart = [];
+    displayCart();
+    document.getElementById("customerName").value = "";
+    document.getElementById("paymentMethod").value = "";
+}
+
+loadMenu();
+
+</script>
+
+</body>
+</html>
